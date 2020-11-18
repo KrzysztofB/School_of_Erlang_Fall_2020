@@ -27,6 +27,18 @@ handle_call(get_all_users, _From, State = #{conn := Conn}) ->
     Usernames = lists:map(fun({Username}) -> Username end, RawUsernames),
     {reply, Usernames, State};
 
+handle_call(get_walls, _From, State = #{conn := Conn}) ->
+    {ok, _Cols, RawWalls} = epgsql:equery(Conn, "select begin_x, begin_y, end_x, end_y from walls"),
+    Walls = lists:map(fun({X1,Y1,X2,Y2}) -> #{begin_x=>X1, begin_y=>Y1, end_x=>X2, end_y=>Y2} end, RawWalls),
+    {reply, Walls, State};
+
+handle_call({get_desks, Date}, _From, State = #{conn := Conn}) ->
+    {ok, _Cols, RawDesks} = epgsql:equery(Conn, 
+        "select d.*, r.date, u.id, u.username from desks d left join reservations r on d.id=r.desk_id left join users u on r.user_id=u.id where r.date is null or r.date= $1::date", [{2020,11,18}]),
+    {reply, RawDesks, State};
+
+%select d.*, r.date from desks d left join reservations r on d.id=r.desk_id
+
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 
@@ -41,3 +53,5 @@ handle_info(Info, State) ->
 terminate(Reason, _State) ->
     logger:error("Unexpected termination ~p", [Reason]),
     ok.
+
+%string2date(StringDate)-> 
