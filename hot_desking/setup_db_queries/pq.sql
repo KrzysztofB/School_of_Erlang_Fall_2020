@@ -19,42 +19,49 @@ CREATE TABLE walls (
 );
 
 CREATE TABLE desks (
-    ID int PRIMARY KEY,
+    ID int,
     x int,
-    y int
+    y int,
+    PRIMARY KEY (ID)
 );
 
 CREATE TABLE reservations(
     user_id int REFERENCES users (ID),
     desk_id int REFERENCES desks (ID),
-    date date 
+    date date NOT NULL 
 );
 
 
-insert into desks values ( 100, 20, 10);
-insert into desks values ( 101, 20, 30);
-insert into desks values ( 102, 70, 10);
-insert into desks values ( 103, 60, 30);
-insert into desks values ( 104, 90, 10);
-insert into desks values ( 105, 110, 10);
-insert into desks values ( 106, 130, 10);
-insert into desks values ( 107, 100, 40);
-insert into desks values ( 108, 120, 40);
-insert into desks values ( 109, 130, 30);
-insert into desks values ( 110, 150, 20);
-insert into desks values ( 111, 150, 40);
+insert into desks values ( 100, 40, 20);
+insert into desks values ( 101, 40, 60);
+insert into desks values ( 102, 140, 20);
+insert into desks values ( 103, 120, 60);
+insert into desks values ( 104, 180, 20);
+insert into desks values ( 105, 220, 20);
+insert into desks values ( 106, 280, 20);
+insert into desks values ( 107, 200, 80);
+insert into desks values ( 108, 240, 80);
+insert into desks values ( 109, 280, 60);
+insert into desks values ( 110, 320, 40);
+insert into desks values ( 111, 320, 80);
 
-insert into walls values( 1, 0, 0, 190, 0);
-insert into walls values( 2, 0, 0, 0, 50);
-insert into walls values( 3, 50, 0, 50, 50);
-insert into walls values( 4, 150, 0, 150, 50);
-insert into walls values( 5, 0, 50, 30, 50);
-insert into walls values( 6, 40, 50, 70, 50);
-insert into walls values( 7, 80, 50, 130, 50);
-insert into walls values( 8, 140, 50, 170, 50);
-insert into walls values( 9, 180, 50, 190, 50);
+insert into walls values( 1, 0, 0, 380, 0);
+insert into walls values( 2, 0, 0, 0, 100);
+insert into walls values( 3, 100, 0, 100, 100);
+insert into walls values( 4, 300, 0, 300, 100);
+insert into walls values( 5, 0, 100, 60, 100);
+insert into walls values( 6, 80, 100, 140, 100);
+insert into walls values( 7, 160, 100, 260, 100);
+insert into walls values( 8, 280, 100, 340, 100);
+insert into walls values( 9, 360, 100, 380, 100);
+insert into walls values( 10, 380, 0, 380, 100);
+
+
 
 insert into reservations values (1, 103, '2020-11-18');
 insert into reservations values (2, 105, '2020-11-18');
+insert into reservations values (11, 104, '2020-11-17');
+insert into reservations values (1, 100, '2020-11-17');
 
-
+insert into reservations values (1, 106, '2020-10-30');
+insert into reservations values (3, 100, '2020-10-30');

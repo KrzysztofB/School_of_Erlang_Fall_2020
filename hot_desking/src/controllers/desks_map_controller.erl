@@ -1,7 +1,6 @@
 -module(desks_map_controller).
 -export([
-         index/1, get_walls/0, maybe_start_db_and_get_desk_reservations/1,
-         date_str_to_db/1
+         index/1
         ]).
 
 -define(CANVAS_WIDTH, 1000).
@@ -26,14 +25,8 @@ get_desks(BinDateAndName) ->
     % TODO pep string and use a date to check if desks are taken or empty
     BinParamsWithoutAmp = string_prep(BinDateAndName),
     Date = get_date(BinParamsWithoutAmp),
-    RawDesks = maybe_start_db_and_get_desk_reservations(Date),
-    %lists:map(fun desk_response/1 end, RawDesks).
-    % TODO Get Desks from DB
-    [
-        #{is_taken => false, id => 1, name => <<"">>, x => 20, y => 20}
-      , #{is_taken => true, id => 2, name => <<"Aleksander">>, x => 40, y => 40}
-    ].
-
+    maybe_start_db_and_get_desk_reservations(Date).
+    
 % TODO uncomment string_prep if you have issues with
 string_prep(BinDateAndName) ->
     ListOfBinParamsWithoutAmp = string:replace(BinDateAndName, "amp;", "", all),
@@ -47,10 +40,6 @@ get_date(BinDateAndName) ->
     ProcessedParams = lists:map(fun get_param/1, Params),
     proplists:get_value(visit_date, ProcessedParams).
 
-date_str_to_db(StringDate) -> 
-    Sections = string:split(BinDateAndName, "-", all),
-    [YYYY | MM | DD ] = Sections,
-    {YYYY, MM, DD}.
 
 
 get_param(<<"name=", Value/binary>>) -> {name, Value};
@@ -72,10 +61,4 @@ maybe_start_db_and_get_desk_reservations(Date) ->
         {error, {already_started, Pid}} -> Pid
     end,
     gen_server:call(DbPid, {get_desks, Date}).
-
-
-% desk_response({DeskId, X, Y, null, null, null}) ->
-%     #{is_taken => false, id => DeskId, name => <<"">>, x => X, y => Y};
-% desk_response({DeskId, X,Y, {_YYYY,_MM,_DD}, _UserId, UserName}) ->
-%     #{is_taken => true, id => DeskId, name => UserName, x => X, y => Y}.
 
